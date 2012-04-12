@@ -3,6 +3,8 @@ package org.ektorp.http;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -109,9 +111,21 @@ public class StdHttpClient implements HttpClient {
 	public HttpResponse head(String uri) {
 		return executeRequest(new HttpHead(uri));
 	}
-	
-	
 
+	public HttpResponse copy(String uri) {
+		return copy(uri, Collections.<String, String> emptyMap());
+	}
+
+	public HttpResponse copy(String uri, Map<String, String> headers) {
+		final HttpCopy hc = new HttpCopy(uri);
+		
+		for (Map.Entry<String, String> header : headers.entrySet()) {
+			hc.addHeader(header.getKey(), header.getValue());
+		}
+		
+		return executeRequest(hc);
+	}
+	
 	private HttpResponse executePutPost(HttpEntityEnclosingRequestBase request,
 			String content, boolean useBackend) {
 		try {

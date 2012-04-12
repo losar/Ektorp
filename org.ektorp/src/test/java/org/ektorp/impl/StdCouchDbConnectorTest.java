@@ -4,10 +4,12 @@ import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -656,6 +658,26 @@ public class StdCouchDbConnectorTest {
         assertTrue(r.getPurged().containsKey("Billy"));
     }
 
+    @Test
+    public void testCopy() {
+    	final TestDoc src = new TestDoc();
+    	src.setId("some_src_id");
+    	
+    	final TestDoc target = new TestDoc();
+    	target.setId("COPYOF-some_src_id");
+    	
+    	final Map<String, String> headers = new HashMap<String, String>();
+    	headers.put("Destination", target.getId());
+    	
+    	when(httpClient.copy(anyString(), anyMap()))
+    		.thenReturn(HttpResponseStub
+    				.valueOf(201, "{\"id\":\"COPYOF-some_src_id\",\"rev\":\"1-967a00dff5e02add41819138abb3284\"}"));
+        	
+    	dbCon.copy(src, target.getId());
+    	
+        verify(httpClient).copy("/test_db/" + src.getId(), headers);    	
+    }
+    
     @SuppressWarnings("serial")
     static class DateDoc extends CouchDbDocument {
 

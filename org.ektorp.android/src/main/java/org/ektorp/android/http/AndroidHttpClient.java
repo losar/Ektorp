@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyStore;
+import java.util.Collections;
+import java.util.Map;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -31,6 +33,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.ektorp.http.HttpClient;
+import org.ektorp.http.HttpCopy;
 import org.ektorp.http.HttpResponse;
 import org.ektorp.http.IdleConnectionMonitor;
 import org.ektorp.http.PreemptiveAuthRequestInterceptor;
@@ -54,6 +57,22 @@ public class AndroidHttpClient implements HttpClient {
 		this.backend = backend;
 	}
 
+	@Override
+	public HttpResponse copy(String uri) {
+		return copy(uri, Collections.<String, String> emptyMap());
+	}
+
+	@Override
+	public HttpResponse copy(String uri, Map<String, String> headers) {
+		final HttpCopy hc = new HttpCopy(uri);
+		
+		for (Map.Entry<String, String> header : headers.entrySet()) {
+			hc.addHeader(header.getKey(), header.getValue());
+		}
+		
+		return executeRequest(hc);
+	}
+	
 	@Override
 	public HttpResponse delete(String uri) {
 		return executeRequest(new HttpDelete(uri));

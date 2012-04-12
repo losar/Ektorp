@@ -73,6 +73,16 @@ public interface CouchDbConnector {
     String delete(String id, String revision);
 
     /**
+     * Copies document (including attachments) to another ID.
+     * 
+     * @param o Object to copy
+     * @param targetId	ID of copy to create
+     * @throws UpdateConflictException
+     *             if there was an update conflict.
+     */
+    void copy(Object o, String targetId);
+    
+    /**
      * Permanently removes the references to deleted documents from the database.
      * 
      * @param revisionsToPurge

@@ -1,6 +1,7 @@
 package org.ektorp.http;
 
 import java.io.*;
+import java.util.Map;
 
 
 public interface HttpClient {
@@ -21,6 +22,10 @@ public interface HttpClient {
 	HttpResponse delete(String uri);
 	
 	HttpResponse head(String uri);
+	
+	HttpResponse copy(String uri);
+	
+	HttpResponse copy(String uri, Map<String, String> headers);
 	
 	HttpResponse getUncached(String uri);
 	

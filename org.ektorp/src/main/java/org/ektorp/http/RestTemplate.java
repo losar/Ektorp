@@ -1,6 +1,7 @@
 package org.ektorp.http;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import org.ektorp.DbAccessException;
 import org.ektorp.util.Exceptions;
@@ -88,6 +89,10 @@ public class RestTemplate {
 
 	public <T> T head(String path, ResponseCallback<T> callback) {
 		return handleResponse(callback, client.head(path));
+	}
+	
+	public <T> T copy(String path, Map<String, String> headers, ResponseCallback<T> callback) {
+		return handleResponse(callback, client.copy(path, headers));
 	}
 	
 	private void handleVoidResponse(HttpResponse hr) {

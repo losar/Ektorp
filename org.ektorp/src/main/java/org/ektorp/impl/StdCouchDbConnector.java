@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -375,6 +376,20 @@ public class StdCouchDbConnector implements CouchDbConnector {
                 revisionHandler).getRevision();
     }
 
+    @Override
+    public void copy(Object o, String targetId) {
+    	Assert.notNull(o, "Document cannot be null");
+    	final String srcId = Documents.getId(o);
+    	assertDocIdHasValue(srcId);
+    	assertDocIdHasValue(targetId);
+    	final String path = dbURI.append(srcId).toString();
+    	
+    	final Map<String, String> headers = new HashMap<String, String>(1);
+    	headers.put("Destination", targetId);
+    	
+    	restTemplate.copy(path, headers, revisionHandler);
+    }
+    
     @Override
     public List<String> getAllDocIds() {
         return restTemplate.get(dbURI.append("_all_docs").toString(),
