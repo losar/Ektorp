@@ -155,6 +155,11 @@ public class CouchDbRepositorySupport<T> implements GenericRepository<T> {
 		db.update(entity);
 	}
 
+	public void copy(T entity, String targetId) {
+		assertEntityNotNull(entity);
+		db.copy(entity, targetId);
+	}
+	
 	private void assertEntityNotNull(T entity) {
 		Assert.notNull(entity, "entity may not be null");
 	}
